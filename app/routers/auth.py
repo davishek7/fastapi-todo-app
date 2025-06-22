@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from typing import Annotated
 from ..models import Users
@@ -11,6 +11,8 @@ from jose import jwt, JWTError
 from dotenv import load_dotenv
 from os import environ
 from sqlalchemy.orm import Session
+from fastapi.templating import Jinja2Templates
+
 
 load_dotenv()
 
@@ -31,6 +33,20 @@ db_dependency = Annotated[Session, Depends(get_db)]
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
+templates = Jinja2Templates(directory="app/templates")
+
+#Pages
+
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+#Endpoints
 
 def authenticate_user(username:str, password:str, db):
     user = db.query(Users).filter(Users.username == username).first()

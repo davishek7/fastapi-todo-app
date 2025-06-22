@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', path='/css/base.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', path='/css/bootstrap.css')}}">
+    <title>TodoApp</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Register
+            </div>
+            <div class="card-body">
+                <form action="" id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">Email</label>
+                            <input type="text" name="email" id="" class="form-control" autocomplete="email" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="">Username</label>
+                            <input type="text" name="username" id="" class="form-control" autocomplete="username" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">First Name</label>
+                            <input type="text" name="firstname" id="" class="form-control" autocomplete="firstname" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="">Last Name</label>
+                            <input type="text" name="lastname" id="" class="form-control" autocomplete="lastname" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">Role</label>
+                            <input type="text" name="role" id="" class="form-control" autocomplete="role" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="">Phone Number</label>
+                            <input type="text" name="phone_number" id="" class="form-control" autocomplete="phone_number" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">Password</label>
+                            <input type="password" name="password" id="" class="form-control" autocomplete="new-password" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="">Confirm Password</label>
+                            <input type="password" name="password2" id="" class="form-control" autocomplete="new-password" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                <a href="/auth/login-page">Already have an account ?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
