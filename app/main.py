@@ -1,13 +1,13 @@
-from fastapi import FastAPI, HTTPException, Path, Query, Request
+from fastapi import FastAPI, Request
 from . import models
-from .database import engine
+from .configs.database import engine, Base
 from .routers import auth, todos, admin, users
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-models.Base.metadata.create_all(bind=engine) 
+Base.metadata.create_all(bind=engine) 
 
 templates = Jinja2Templates(directory="app/templates")
 

@@ -1,5 +1,6 @@
 from .utils import *
-from ..routers.users import get_current_user, get_db
+from ..services.auth import get_current_user
+from ..configs.database import get_db
 from fastapi import status
 
 

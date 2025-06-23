@@ -1,9 +1,11 @@
 from .utils import *
-from ..routers.auth import get_db, authenticate_user, create_access_token, SECRET_KEY, ALGORITHM, get_current_user
+from ..services.auth import authenticate_user, create_access_token, get_current_user
+from ..configs.database import get_db
 from jose import jwt
 from datetime import timedelta
 import pytest
 from fastapi import HTTPException, status
+from ..configs.settings import settings
 
 
 app.dependency_overrides[get_db] = override_get_db
@@ -30,7 +32,7 @@ def test_create_access_token():
     
     token = create_access_token(username, user_id, role, expires_delta)
 
-    docoded_token = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options={'verify_signature': False})
+    docoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM], options={'verify_signature': False})
 
     assert docoded_token['sub'] == username
     assert docoded_token['id'] == user_id
@@ -40,7 +42,7 @@ def test_create_access_token():
 async def test_get_current_user_valid_token():
 
     encode = {'sub': 'testuser', 'id': 1, 'role': 'admin'}
-    token = jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     user = await get_current_user(token=token)
     assert user =={'username': 'testuser', 'id': 1, 'user_role': 'admin'}
@@ -48,7 +50,7 @@ async def test_get_current_user_valid_token():
 @pytest.mark.asyncio
 async def test_get_current_user_missing_payload():
     encode = {'role': 'user'}
-    token = jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+    token = jwt.encode(encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
     with pytest.raises(HTTPException) as excinfo:
         await get_current_user(token=token)

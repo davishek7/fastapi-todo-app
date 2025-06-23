@@ -5,18 +5,15 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from os import environ
-from dotenv import load_dotenv
+from app.configs import database
+from app.configs.settings import settings
 
-from app import models
-
-load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("DB_URL", environ["POSTGRESQL_DATABASE_URL"])
+config.set_main_option("DB_URL", settings.SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -27,7 +24,7 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = models.Base.metadata
+target_metadata = database.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
