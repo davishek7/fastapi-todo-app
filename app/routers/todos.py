@@ -1,11 +1,34 @@
-from fastapi import APIRouter, HTTPException, Path, status
+from fastapi import APIRouter, HTTPException, Path, status, Request
+from fastapi.templating import Jinja2Templates
 from ..services import todos
 from ..schemas.todos import TodoRequest
 from ..configs.dependency import user_dependency, db_dependency
+from ..models.todos import Todos
 
 
 router = APIRouter(prefix='/todo', tags=['todos'])
 
+templates = Jinja2Templates(directory='app/templates')
+
+
+# Pages
+
+@router.get("/todo-page")
+async def render_todo_page(request: Request, db: db_dependency):
+    user, todos_list = await todos.render_todo_page_service(request, db)
+    return templates.TemplateResponse("todos.html", {'request': request, "todos": todos_list, "user": user})
+
+@router.get('/add-todo-page')
+async def render_add_todo_apge(request: Request):
+    user = todos.render_add_todo_page(request)
+    return templates.TemplateResponse("add-todo.html", {'request': request, 'user': user})
+
+@router.get('/edit-todo-page/{todo_id}')
+async def render_edit_todo_page(request: Request, db: db_dependency, todo_id: int):
+    user, todo = await todos.render_edit_todo_page(request, db, todo_id)
+    return templates.TemplateResponse("edit-todo.html", {'request': request, 'todo': todo, 'user': user})
+
+# Endpoints
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_todos(user:user_dependency, db: db_dependency):
