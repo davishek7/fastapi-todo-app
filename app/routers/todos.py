@@ -4,28 +4,39 @@ from ..services import todos
 from ..schemas.todos import TodoRequest
 from ..configs.dependency import user_dependency, db_dependency
 from ..models.todos import Todos
+from ..services.auth import get_current_user
 
 
 router = APIRouter(prefix='/todo', tags=['todos'])
 
 templates = Jinja2Templates(directory='app/templates')
 
-
 # Pages
 
 @router.get("/todo-page")
 async def render_todo_page(request: Request, db: db_dependency):
-    user, todos_list = await todos.render_todo_page_service(request, db)
-    return templates.TemplateResponse("todos.html", {'request': request, "todos": todos_list, "user": user})
+    try:
+        user = await get_current_user(request.cookies.get('access_token'))
+        if user is None:
+            return todos.redirect_to_login()
+        todos_list = db.query(Todos).filter(Todos.owner_id == user.get("id")).all()
+        return templates.TemplateResponse("todos.html", {'request': request, "todos": todos_list, "user": user})
+    except:
+        return todos.redirect_to_login()
 
 @router.get('/add-todo-page')
 async def render_add_todo_apge(request: Request):
-    user = todos.render_add_todo_page(request)
+    user = await get_current_user(request.cookies.get('access_token'))
+    if user is None:
+        return todos.redirect_to_login()
     return templates.TemplateResponse("add-todo.html", {'request': request, 'user': user})
 
 @router.get('/edit-todo-page/{todo_id}')
 async def render_edit_todo_page(request: Request, db: db_dependency, todo_id: int):
-    user, todo = await todos.render_edit_todo_page(request, db, todo_id)
+    user = await get_current_user(request.cookies.get('access_token'))
+    if user is None:
+        return todos.redirect_to_login()
+    todo = todos.get_todo_service(user, db, todo_id)
     return templates.TemplateResponse("edit-todo.html", {'request': request, 'todo': todo, 'user': user})
 
 # Endpoints

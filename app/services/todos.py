@@ -42,32 +42,4 @@ def redirect_to_login():
     redirect_response = RedirectResponse(url='/auth/login-page', status_code=status.HTTP_302_FOUND)
     redirect_response.delete_cookie('access_token')
     return redirect_response
-
-async def render_todo_page_service(request, db):
-    user = await get_current_user(request.cookies.get('access_token'))
-
-    if user is None:
-        return redirect_to_login()
-    
-    todos = db.query(Todos).filter(Todos.owner_id == user.get("id")).all()
-
-    return user, todos
-
-async def render_add_todo_page(request):
-    user = await get_current_user(request.cookies.get('access_token'))
-
-    if user is None:
-        return redirect_to_login()
-    
-    return user
-
-async def render_edit_todo_page(request, db, todo_id):
-    user = await get_current_user(request.cookies.get('access_token'))
-
-    if user is None:
-        redirect_to_login()
-
-    todo = get_todo_service(user, db, todo_id)
-
-    return user, todo
     
