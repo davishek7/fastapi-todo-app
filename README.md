@@ -1,6 +1,6 @@
 # FastAPI Todo App Developed By Avishek Das
 
-Usrs can add, edit, list and delete Todo. JWT authentication for user login.
+Users can add, edit, list and delete Todo. JWT authentication for user login.
 ***
 
 ## Technologies Used
